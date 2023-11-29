@@ -5,7 +5,7 @@
 - bash-completion
 - curl
 - nano
-- netcat
+- netcat-openbsd
 - python3
 - sudo
 - systemd

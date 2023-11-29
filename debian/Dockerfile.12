@@ -2,7 +2,7 @@ FROM jrei/systemd-debian:12
 
 RUN apt-get update \
     && apt-get upgrade -y \
-    && apt-get install -y bash-completion curl nano netcat python3 sudo systemd unzip wget \
+    && apt-get install -y bash-completion curl nano netcat-openbsd python3 sudo systemd unzip wget \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
