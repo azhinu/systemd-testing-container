@@ -1,0 +1,49 @@
+name: Docker images build and push
+
+on:
+  push:
+    branches: ['master']
+  workflow_dispatch:
+  schedule:
+    - cron: '30 0 1 * *'
+
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+    environment: main
+    strategy:
+      matrix:
+        include:
+          - name: systemd-debian-12
+            dockerfile: debian/Dockerfile.12
+            platforms: |-
+              linux/amd64
+              linux/arm64
+            tags: |-
+              azhinu/systemd:debian-12
+              azhinu/systemd:debian
+              azhinu/systemd:latest
+    steps:
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ env.DOCKER_HUB_USERNAME }}}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+      - name: Build and push ${{ matrix.name }}
+        uses: docker/build-push-action@v5
+        with:
+          file: ${{ matrix.dockerfile }}
+          platforms: ${{ matrix.platforms }}
+          push: true
+          tags: ${{ matrix.tags }}
+          labels: |
+            maintainer=${{ github.repository_owner }}
+            org.opencontainers.image.vendor=${{ github.repository_owner }}
+            org.opencontainers.image.revision=${{ github.sha }}
