@@ -4,7 +4,8 @@ RUN apt-get update \
     && apt-get upgrade -y \
     && apt-get install -y bash-completion curl nano netcat-openbsd python3 sudo systemd unzip wget \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /etc/apt/apt.conf.d/docker-clean \
+    && echo "source /etc/profile" | tee -a /root/.bashrc
 
 VOLUME [ "/sys/fs/cgroup" ]
 
